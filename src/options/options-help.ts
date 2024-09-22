@@ -34,11 +34,104 @@ const helpContent: {[key: string]: any} = {
     },
     thouSuf: {
         title: '想法后缀',
-        help: `<p><span class="lineinline">想法</span>也就是你平时阅读时在书中发表的想法。当你将前后缀设置为两个星号(**)时，导出的想法在 Markdown 中将会被加粗。</p>`
+        help: `<p><span class="lineinline">想法</span>也就是你平时阅读时在书中发表的想法。当你将前后缀设置为两个星号(**)时，导出的想法在 Markdown 中将会被加粗。可使用<span class="lineinline">{createTime}</span>作为占位符导出想法创建时间。</p>`
+    },
+    metaTemplate: {
+        title: '书本信息导出模板',
+        help: `设置导出书本信息时所用的模板。模板引擎为 <a href="https://nunjucks.bootcss.com/templating.html" target="_blank">nunjucks</a>。
+下面是一个模板例子：<p><span class="lineinline">[1] {{metaData.author}}.{{metaData.title}}.{% if metaData.translator %}{{metaData.translator}}，译.{% endif %}{{metaData.publisher}}，{{metaData.publishTime.slice(0, 4)}}</span></p>
+更多模板字段可参考书本信息响应数据：<pre>
+{
+    "bookId": "821366",
+    "title": "飞鸟集",
+    "author": "[印]泰戈尔",
+    "translator": "徐翰林",
+    "cover": "https://cdn.weread.qq.com/weread/cover/12/YueWen_821366/s_YueWen_821366.jpg",
+    "format": "epub",
+    "price": 8.99,
+    "originalPrice": 0,
+    "intro": "    翻阅《飞鸟集》，就仿佛打开了少年时封在樱花树下的彼此写下的密信，那些回忆如同潮水一般涌现，那些玩闹，那些小忧伤，那些豪言壮语，那些恶作剧，那些亲密无间，就仿佛黄昏中的晚霞，浸渍了醉人的红——年轻的读者们啊，这本《飞鸟集》就像是一本青春的日记，会将你们的回忆保存在里面。因为，它是能最大程度将“爱”提炼出来的作品。读《飞鸟集》，你会发现爱与被爱是何等的融洽为一；读《飞鸟集》，你会将烦恼和痛苦提炼为一种修行。年少的人读《飞鸟集》是有福的，因为，这就等于在你生命的陶罐中种下了爱的种子，不知何时，就会生根发芽。\\n",
+    "finished": 1,
+    "free": 0,
+    "publishTime": "2015-10-01 00:00:00",
+    "category": "文学-现代诗歌",
+    "categories": [
+        {
+            "categoryId": 300000,
+            "subCategoryId": 300010,
+            "categoryType": 0,
+            "title": "文学-现代诗歌"
+        }
+    ],
+    "language": "zh-CN",
+    "chapterSize": 13,
+    "updateTime": 1712036047,
+    "isbn": "9787538592313",
+    "publisher": "北方妇女儿童出版社",
+    "totalWords": 48227,
+    "secret": 0,
+    "finishReading": 0,
+    "star": 88,
+    "ratingCount": 8680,
+    "ratingDetail": {
+        "one": 123,
+        "two": 52,
+        "three": 521,
+        "four": 984,
+        "five": 6699,
+        "recent": 52
+    },
+    "newRating": 843,
+    "newRatingCount": 7658,
+    "newRatingDetail": {
+        "good": 6480,
+        "fair": 1090,
+        "poor": 88,
+        "recent": 50,
+        "myRating": "good",
+        "title": "脍炙人口"
+    },
+    "ranklist": {},
+    "copyrightInfo": {
+        "id": -35759,
+        "name": "华文天下",
+        "userVid": 15554510,
+        "role": 2,
+        "avatar": "https://res.weread.qq.com/wravatar/WV0006-V5mdDlngulfzqqr1gbYd5ab/0",
+        "cpType": 0
+    },
+    "authorSeg": [
+        {
+            "words": "[印]",
+            "highlight": 0
+        },
+        {
+            "words": "泰戈尔",
+            "highlight": 1,
+            "authorId": "134020"
+        }
+    ],
+    "translatorSeg": [
+        {
+            "words": "徐翰林",
+            "highlight": 1,
+            "authorId": "395234"
+        }
+    ]
+}
+</pre>`
+    },
+    footSupTemp: {
+        title: '脚注参考格式化模板',
+        help: `<p>导出脚注时用来格式化“脚注参考”的模板。通过字符串替换实现，仅支持占位填充</p>`
+    },
+    footNoteTemp: {
+        title: '脚注内容格式化模板',
+        help: `<p>导出脚注时用来格式化“脚注内容”的模板。通过字符串替换实现，仅支持占位填充</p>`
     },
     thouMarkSuf: {
         title: '想法标注后缀',
-        help: `<p><span class="lineinline">想法标注</span>即想法所对应的书本内容。当你将想法标注前后缀设置为两个星号(**)时，导出的想法标注在 Markdown 中将会被加粗。</p>`
+        help: `<p><span class="lineinline">想法标注</span>即想法所对应的书本内容。当你将想法标注前后缀设置为两个星号(**)时，导出的想法标注在 Markdown 中将会被加粗。可使用<span class="lineinline">{createTime}</span>作为占位符导出想法创建时间。</p>`
     },
     codeSuf: {
         title: '代码块后缀',
@@ -79,13 +172,17 @@ const helpContent: {[key: string]: any} = {
         title: '导出标注包含想法',
         help: `<p>选中该选项之后，导出的标注（本章标注或是全书标注）中将包含你在书中留下的想法。</p>`
     },
-	thoughtFirst: {
+    thoughtFirst: {
         title: '想法在标注之前',
         help: `<p>选中该选项之后，导出的想法排在对应标注的前面。</p>`
     },
     allTitles: {
         title: '导出标注包含所有章节',
         help: `<p>选中该选项之后，导出全书标注/热门标注时标注中将包含所有章节标题，即使该章节下没有标注/热门标注。</p>`
+    },
+    anchorTitle: {
+        title: '导出标注包含锚点标题',
+        help: `<p>选中该选项之后，导出全书标注/本章标注时标注中将包含锚点标题（如果有的话）。锚点标题为某种特殊的子标题，扩展无法确认标注和锚点标题的关联关系，所以默认会将主标题下的锚点标题全部导出，这时你可能会发现导出的标注中，有一些和标注不相关的子标题，如果你不希望导出这部分子标题，可以禁用该选项。</p>`
     },
     displayN: {
         title: '热门标注显示标注人数',
@@ -107,9 +204,13 @@ const helpContent: {[key: string]: any} = {
         title: '开启 fancybox',
         help: `<p>选中该选项之后，将支持读书页图片放大显示。</p>`
     },
-	enableThoughtEsc: {
+    enableThoughtEsc: {
         title: '开启想法转义\<\>',
         help: `<p>发表想法时，有时候 \< 和 \> 将会被转义，选中该选项后扩展会将这两个字符替换为全角形式，避免转义。</p>`
+    },
+    enableShelf: {
+        title: '开启书架',
+        help: `<p>选中该选项之后，将会在 popup 中添加名为“书架”的按钮，点击该按钮可查看书架。</p>`
     },
     enableStatistics: {
         title: '开启统计',
@@ -119,51 +220,64 @@ const helpContent: {[key: string]: any} = {
         title: '开启选项',
         help: `<p>选中该选项之后，将会在 popup 中添加名为“选项”的按钮，点击该按钮可进入选项页。</p>`
     },
-	enableCopyImgs: {
+    enableCopyImgs: {
         title: '开启图片/注释/代码块导出',
         help: `<p>选中该选项之后，将会在导出本章标注时一起导出被标注的图片、注释或代码块。</p>`
     },
+    imgTag: {
+        title: '图片/注释/代码块占位字符',
+        help: `<p>设置标注中的图片占位字符串，比如“[插图]”，扩展将按该设置导出图片/注释/代码块。</p>`
+    },
+    scale: {
+        title: '图片/注释/代码块缩放比例',
+        help: `<p>扩展将会按比例缩放图片/注释/代码块后再检测其是否被标注覆盖。</p>`
+    },
     selectActionOptions: {
-        title: '选中后动作',
+        title: '选中后动作（可按下 Ctrl 临时禁用）',
         help: `<p>在这里可设置选中文字后的动作。设置为“马克笔”则会在每次选中文字时自动点击“马克笔”以标注选中内容。设置为“复制”则在选中文字后自动复制选中内容。设置为“无”则关闭动作。</p>`
     },
-	thoughtTextOptions: {
+    thoughtTextOptions: {
         title: '想法所对应文本被标注时保留',
         help: `<p>（用直线/马克笔/波浪线）标注了某段内容，同时又在这段文本上发布了想法，则在获取随带想法的标注时该段内容会出现两次。在这里可以设置如何保留这段内容。</p>`
     },
     enableDevelop: {
-        title: '开发者选项',
+        title: '开发者选项（停用）',
         help: `<p>选中该选项之后，将会在 popup 中添加名为“开发者选项”的按钮，点击该按钮可调用用于测试的某些函数。</p>`
+    },
+    distinctThouMarks: {
+        title: '多条想法对应相同标注时只保留一条标注',
+        help: `<p>选中该选项之后，如果有多条想法对应相同标注，将只会导出一条标注，而不会每条想法都相应导出一遍标注。</p>`
     }
 }
 
 function insertHelpContent(){
-	/* 插入帮助按钮 */
+    /* 插入帮助按钮 */
     const helpIcon = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABIUlEQVQ4y+2TsarCMBSGvxTBRdqiUZAWOrhJB9EXcPKFfCvfQYfulUKHDqXg4CYUJSioYO4mSDX3ttzt3n87fMlHTpIjlsulxpDZbEYYhgghSNOUOI5Ny2mZYBAELBYLer0eAJ7ncTweKYri4x7LJJRS0u12n7XrukgpjSc0CpVSXK/XZ32/31FKNW85z3PW6zXT6RSAJEnIsqy5UGvNZrNhu90CcDqd+C6tT6J+v//2Th+PB2VZ1hN2Oh3G4zGTyQTbtl/YbrdjtVpxu91+Ljyfz0RRhG3bzOfzF+Y4TvNXvlwuaK2pE4tfzr/wzwsty0IIURlL0998KxRCMBqN8H2/wlzXJQxD2u12vVkeDoeUZUkURRU+GAw4HA7s9/sK+wK6CWHasQ/S/wAAAABJRU5ErkJggg==" tabindex="0"></img>`;
     for (const id in helpContent) {
-        let target = $(`#${id}`);
+        const target = $(`#${id}`);
         if(helpContent[id].help){
             target.before(`<label for='${id}' id='${id}Label'>${helpContent[id].title}<span class="help-icon">${helpIcon}</span></label>`)
             target.parent().after(`<div class='help-content' hidden=''>${helpContent[id].help}</div>`)
         }
     }
-	/* 帮助按钮点击事件 */
-	let helpIcons = document.getElementsByClassName("help-icon")
-	let helpContents = document.getElementsByClassName("help-content")
-	for (let index = 0; index < helpIcons.length; index++) {
-		let helpIcon = helpIcons[index] as HTMLElement
-		helpIcon.onclick = function(){
-			let help = helpContents[index] as HTMLElement
-			help.hidden = !help.hidden
-			return false
-		}
-	}
+    /* 帮助按钮点击事件 */
+    const helpIcons = document.getElementsByClassName("help-icon")
+    const helpContents = document.getElementsByClassName("help-content")
+    for (let index = 0; index < helpIcons.length; index++) {
+        const helpIcon = helpIcons[index] as HTMLElement
+        helpIcon.onclick = function(){
+            // 第一项是注意事项，总是展示
+            const help = helpContents[index + 1] as HTMLElement
+            help.hidden = !help.hidden
+            return false
+        }
+    }
 }
 
 function initHelpContent() {
-	window.addEventListener('load', function(){
-		insertHelpContent();
-	});
+    window.addEventListener('load', function(){
+        insertHelpContent();
+    });
 }
 
 export { initHelpContent };

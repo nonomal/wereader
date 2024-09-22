@@ -2,3 +2,5 @@ test*.*
 node_modules/
 dist/
 *.pem
+upload.cmd
+.idea

@@ -1,0 +1,9 @@
+.cursor-pointer {
+    cursor: pointer;
+}
+.cursor-default {
+    cursor: default;
+}
+.readerNotePanel{
+    padding-top: 0px;
+}

@@ -1,5 +1,4 @@
 body {
-    background-color: #fff;
     font-family: sans-serif;
     font-size: 12px;
     max-width: 500px;
@@ -20,7 +19,7 @@ body {
 
 textarea,input[type=text]{
     font-family:auto;
-	max-width: -webkit-fill-available;
+    max-width: -webkit-fill-available;
 }
 
 label,h3,a,details>summary{
@@ -65,17 +64,9 @@ button:focus {
     background-color: #fefefe;
 }
 
-input {
-    margin-left: 5px;
-}
-
 label,
 input {
     align-self: center;
-}
-
-input[type="text"] {
-    min-width: 70%;
 }
 
 input[type="number"] {
@@ -185,6 +176,29 @@ img{
 
 .help-content li {
     margin: 2px;
+}
+
+/* 提示信息 */
+
+.help-content .warning {
+    font-weight: bold;
+    color: #ed0000;
+}
+
+.help-content.notify {
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.help-block {
+    border: 1px dashed;
+    margin: 10px;
+}
+
+/* 代码块 */
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 /* 显示进度条 */
